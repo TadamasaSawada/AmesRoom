@@ -79,12 +79,12 @@ if type_face=="F":
     mat_tran_inv_y2 = (height_src-1)-mat_tran_inv_y2
 
 elif type_face=="B":
-    arr_x_src = np.linspace(+xR -0.5/dpi,
-                            -xL +0.5/dpi, num= width_src)
+    arr_x_src = np.linspace(-xR +0.5/dpi,
+                            +xL -0.5/dpi, num= width_src)
     arr_y_src = np.linspace(+yU -0.5/dpi,
                             -yD +0.5/dpi, num=height_src)
 
-    tanB= -(zB*kr-zB*kl)/(xL*kl+xR*kr) # == (zB/zF)*tanF 
+    tanB= (zB/zF)*tanF 
     cosB= np.cos(np.arctan(tanB))
     sinB= np.sin(np.arctan(tanB))
 
@@ -93,26 +93,24 @@ elif type_face=="B":
     width_tran  = int(dpi*w_ames)
     height_tran = int(dpi*h_ames)
     
-    arr_x2_tran = np.linspace(+xR*kr/cosB -0.5/dpi,
-                              -xL*kl/cosB +0.5/dpi, num=width_tran) 
+    arr_x2_tran = np.linspace(-xR*kr/cosB +0.5/dpi,
+                              +xL*kl/cosB -0.5/dpi, num=width_tran) 
     arr_y2_tran = np.linspace(+yU*kMax -0.5/dpi,
                               -yD*kMax +0.5/dpi, num=height_tran)
     mat_x2_tran, mat_y2_tran = np.meshgrid(arr_x2_tran, arr_y2_tran)
 
     mat_tran_inv = np.zeros((height_tran, width_tran, 3))
     mat_tran_inv = mat_tran_inv.astype('float32')
-    mat_tran_inv[:,:,0] = -mat_x2_tran*zB*cosB
-    mat_tran_inv[:,:,1] = -mat_y2_tran*zB
-    mat_tran_inv[:,:,2] =  mat_x2_tran*sinB - zB
+    mat_tran_inv[:,:,0] = mat_x2_tran*zB*cosB
+    mat_tran_inv[:,:,1] = mat_y2_tran*zB
+    mat_tran_inv[:,:,2] = mat_x2_tran*sinB + zB
 
-    
     mat_tran_inv_x2 = mat_tran_inv[:,:,0]/mat_tran_inv[:,:,2]
     mat_tran_inv_y2 = mat_tran_inv[:,:,1]/mat_tran_inv[:,:,2]
-    mat_tran_inv_x2 -= arr_x_src[width_src-1]
+    mat_tran_inv_x2 -= arr_x_src[0]
     mat_tran_inv_y2 -= arr_y_src[height_src-1]
     mat_tran_inv_x2 *= dpi
     mat_tran_inv_y2 *= dpi
-    mat_tran_inv_x2 = (width_src -1)-mat_tran_inv_x2
     mat_tran_inv_y2 = (height_src-1)-mat_tran_inv_y2
 
 elif type_face=="D":
